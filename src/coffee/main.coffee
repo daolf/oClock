@@ -14,6 +14,7 @@ class Clock
       strokeColor: 'black'
       strokeCap: 'round'
       strokeWidth: 4
+      applyMatrix: false
       onFrame: (event) ->
         this.rotate(CLOCK_SPEED, self.from)
 
@@ -23,6 +24,7 @@ class Clock
       strokeColor: 'black'
       strokeCap: 'round'
       strokeWidth: 4
+      applyMatrix: false
       onFrame: (event) ->
         this.rotate(CLOCK_SPEED/2, self.from)
 
@@ -32,36 +34,40 @@ class Clock
       strokeColor: 'black'
       strokeWidth: 3
 
-    @group = new Group
-      children: [minuteHand, hourHand]
-      transformContent: false
-      postition: @center
-
     return
   
   pause: ->
-    @minuteHand.onFrame = (event) ->
+    @hourHand.onFrame = (event) ->
       this.rotate(0)
 
   play: ->
     thisFrom = @from
     @minuteHand.onFrame = (event) ->
-      console.log this.getRotation()
-      this.rotate(CLOCK_SPEED, thisFrom)
+      this.rotate(0, thisFrom)
     @hourHand.onFrame = (event) ->
       this.rotate(CLOCK_SPEED, thisFrom)
 
-  goto: (state) ->
+  goto: (hand, angle) ->
+    thisFrom = @from
+    hand.onFrame = (event) ->
+      if angle > 0
+        diff = angle - hand.getRotation()
+      else 
+        diff = Math.abs(hand.getRotation() - angle)
+
+      if diff > CLOCK_SPEED
+        this.rotate(CLOCK_SPEED, thisFrom)
+      else if diff < CLOCK_SPEED
+        this.rotate(diff, thisFrom)
+        this.rotate(0 , thisFrom)
+        this.onFrame = undefined
+    
 
 
 clock = new Clock(100,100)
+clock.play()
 
 click = 0
 document.onclick = ->
-  if click%2
-    console.log clock
-    clock.pause()
-    click++
-  else
-    clock.play()
-    click++
+  console.log "ok"
+  clock.goto(clock.hourHand, 0)

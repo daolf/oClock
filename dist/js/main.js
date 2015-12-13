@@ -23,6 +23,7 @@ Clock = (function() {
       strokeColor: 'black',
       strokeCap: 'round',
       strokeWidth: 4,
+      applyMatrix: false,
       onFrame: function(event) {
         return this.rotate(CLOCK_SPEED, self.from);
       }
@@ -33,6 +34,7 @@ Clock = (function() {
       strokeColor: 'black',
       strokeCap: 'round',
       strokeWidth: 4,
+      applyMatrix: false,
       onFrame: function(event) {
         return this.rotate(CLOCK_SPEED / 2, self.from);
       }
@@ -43,16 +45,11 @@ Clock = (function() {
       strokeColor: 'black',
       strokeWidth: 3
     });
-    this.group = new Group({
-      children: [minuteHand, hourHand],
-      transformContent: false,
-      postition: this.center
-    });
     return;
   }
 
   Clock.prototype.pause = function() {
-    return this.minuteHand.onFrame = function(event) {
+    return this.hourHand.onFrame = function(event) {
       return this.rotate(0);
     };
   };
@@ -61,15 +58,32 @@ Clock = (function() {
     var thisFrom;
     thisFrom = this.from;
     this.minuteHand.onFrame = function(event) {
-      console.log(this.getRotation());
-      return this.rotate(CLOCK_SPEED, thisFrom);
+      return this.rotate(0, thisFrom);
     };
     return this.hourHand.onFrame = function(event) {
       return this.rotate(CLOCK_SPEED, thisFrom);
     };
   };
 
-  Clock.prototype.goto = function(state) {};
+  Clock.prototype.goto = function(hand, angle) {
+    var thisFrom;
+    thisFrom = this.from;
+    return hand.onFrame = function(event) {
+      var diff;
+      if (angle > 0) {
+        diff = angle - hand.getRotation();
+      } else {
+        diff = Math.abs(hand.getRotation() - angle);
+      }
+      if (diff > CLOCK_SPEED) {
+        return this.rotate(CLOCK_SPEED, thisFrom);
+      } else if (diff < CLOCK_SPEED) {
+        this.rotate(diff, thisFrom);
+        this.rotate(0, thisFrom);
+        return this.onFrame = void 0;
+      }
+    };
+  };
 
   return Clock;
 
@@ -77,15 +91,11 @@ Clock = (function() {
 
 clock = new Clock(100, 100);
 
+clock.play();
+
 click = 0;
 
 document.onclick = function() {
-  if (click % 2) {
-    console.log(clock);
-    clock.pause();
-    return click++;
-  } else {
-    clock.play();
-    return click++;
-  }
+  console.log("ok");
+  return clock.goto(clock.hourHand, 0);
 };
