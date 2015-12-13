@@ -12,8 +12,10 @@ module.exports = (grunt) ->
 
     coffee: {
       compile:
+        options:
+          bare: true
         files:
-          "dist/js/oclock.js": ["src/coffee/classes/*.coffee", "src/coffee/*.coffee"]
+          "dist/js/main.js": "src/coffee/main.coffee"
     },
 
     sass: {
@@ -27,12 +29,6 @@ module.exports = (grunt) ->
         }
     },
 
-    uglify: {
-      my_target:
-        files:
-          "dist/oclock.min.js": ["dist/js/oclock.js"]
-    },
-
     watch: {
       coffee:
         files: ['src/coffee/**/*.coffee'],
@@ -41,6 +37,7 @@ module.exports = (grunt) ->
         files: ['src/sass/main.scss'],
         tasks: ['sass']
     },
+
     browserSync: {
       dev: {
         bsFiles: {

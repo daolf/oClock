@@ -1,13 +1,11 @@
-###
-  EXAMPLE Class
-###
-
-root = exports ? this
-
-class root.EXAMPLE
+class Clock
   constructor: () ->
     @hello = "Hello World!"
 
 
   helloWorld: () ->
     console.log @hello
+
+console.log "hello"
+clock = new Clock()
+clock.helloWorld()
