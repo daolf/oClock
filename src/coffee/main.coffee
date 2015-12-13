@@ -15,7 +15,6 @@ class Clock
       strokeCap: 'round'
       strokeWidth: 4
       onFrame: (event) ->
-        console.log @
         this.rotate(CLOCK_SPEED, self.from)
 
     @hourHand = new Path.Line
@@ -25,14 +24,44 @@ class Clock
       strokeCap: 'round'
       strokeWidth: 4
       onFrame: (event) ->
-        console.log @
-        this.rotate(CLOCK_SPEED/60, self.from)
+        this.rotate(CLOCK_SPEED/2, self.from)
 
     @container = new Path.Circle
       center: @center
       radius: CLOCK_WIDTH
       strokeColor: 'black'
       strokeWidth: 3
-    
+
+    @group = new Group
+      children: [minuteHand, hourHand]
+      transformContent: false
+      postition: @center
+
+    return
+  
+  pause: ->
+    @minuteHand.onFrame = (event) ->
+      this.rotate(0)
+
+  play: ->
+    thisFrom = @from
+    @minuteHand.onFrame = (event) ->
+      console.log this.getRotation()
+      this.rotate(CLOCK_SPEED, thisFrom)
+    @hourHand.onFrame = (event) ->
+      this.rotate(CLOCK_SPEED, thisFrom)
+
+  goto: (state) ->
+
 
 clock = new Clock(100,100)
+
+click = 0
+document.onclick = ->
+  if click%2
+    console.log clock
+    clock.pause()
+    click++
+  else
+    clock.play()
+    click++
