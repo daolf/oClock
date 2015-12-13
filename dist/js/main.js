@@ -1,4 +1,4 @@
-var BLANK_SPACE, CLOCK_SPEED, CLOCK_WIDTH, Clock, ClockDots, ClockNumber, DOTMAP, MAP, dot, hour, hour2, s;
+var BLANK_SPACE, CLOCK_SPEED, CLOCK_WIDTH, Clock, ClockDots, ClockNumber, DOTMAP, MAP, dot, hour, hour2, minute, minute2, s;
 
 CLOCK_WIDTH = 20;
 
@@ -186,8 +186,14 @@ hour2 = new ClockNumber(30 + 5 * s, 100);
 
 dot = new ClockDots(30 + 10 * s, 100);
 
+minute = new ClockNumber(30 + 12 * s, 100);
+
+minute2 = new ClockNumber(30 + 17 * s, 100);
+
 document.onclick = function() {
   hour.shape(1);
   hour2.shape(8);
-  return dot.shape(0);
+  dot.shape(0);
+  minute.shape(4);
+  return minute2.shape(3);
 };

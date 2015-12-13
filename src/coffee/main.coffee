@@ -213,8 +213,12 @@ s = BLANK_SPACE + CLOCK_WIDTH*2
 hour = new ClockNumber(30, 100)
 hour2 = new ClockNumber(30 + 5 * s, 100)
 dot = new ClockDots(30 + 10 * s, 100)
+minute = new ClockNumber(30 + 12 * s, 100)
+minute2 = new ClockNumber(30 + 17 * s, 100)
 
 document.onclick = ->
   hour.shape(1)
   hour2.shape(8)
   dot.shape(0)
+  minute.shape(4)
+  minute2.shape(3)
