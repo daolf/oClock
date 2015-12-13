@@ -82,7 +82,16 @@ MAP = [
     "F", "_", "_", "J", "|",
     "L", "_", "_", "_", "J"
   ],
+]
 
+DOTMAP = [
+  [ "_", "_",
+    "F", "7",
+    "L", "J",
+    "F", "7",
+    "L", "J",
+    "_", "_"
+  ]
 ]
 
 class Clock
@@ -116,7 +125,7 @@ class Clock
       center: @center
       radius: CLOCK_WIDTH
       strokeColor: 'black'
-      strokeWidth: 3
+      strokeWidth: 2
   
   pause: ->
     @hourHand.onFrame = (event) ->
@@ -178,12 +187,34 @@ class ClockNumber
     mapToApply = MAP[digit]
     for clock, index in @clocks
       clock.setState(mapToApply[index])
+
+class ClockDots
+  constructor: (x = 0, y = 0) ->
+    s = BLANK_SPACE + CLOCK_WIDTH*2
+    @clocks = [
+      new Clock(x + s,y)      , new Clock(x + 2*s, y)       , 
+      new Clock(x + s,y + s)  , new Clock(x + 2*s, y + s)   , 
+      new Clock(x + s,y + s*2), new Clock(x + 2*s, y + s*2) , 
+      new Clock(x + s,y + s*3), new Clock(x + 2*s, y + s*3) , 
+      new Clock(x + s,y + s*4), new Clock(x + 2*s, y + s*4) , 
+      new Clock(x + s,y + s*5), new Clock(x + 2*s, y + s*5) 
+    ]
+
+  shape: (digit) ->
+    mapToApply = DOTMAP[digit]
+    for clock, index in @clocks
+      clock.setState(mapToApply[index])
     
 
 # clock = new Clock(100, 100)
 # document.onclick = ->
 #   clock.setState("_")
+s = BLANK_SPACE + CLOCK_WIDTH*2
+hour = new ClockNumber(30, 100)
+hour2 = new ClockNumber(30 + 5 * s, 100)
+dot = new ClockDots(30 + 10 * s, 100)
 
-clock = new ClockNumber(100, 100)
 document.onclick = ->
-  clock.shape(8)
+  hour.shape(1)
+  hour2.shape(8)
+  dot.shape(0)

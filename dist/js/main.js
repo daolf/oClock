@@ -1,4 +1,4 @@
-var BLANK_SPACE, CLOCK_SPEED, CLOCK_WIDTH, Clock, ClockNumber, MAP, clock;
+var BLANK_SPACE, CLOCK_SPEED, CLOCK_WIDTH, Clock, ClockDots, ClockNumber, DOTMAP, MAP, dot, hour, hour2, s;
 
 CLOCK_WIDTH = 20;
 
@@ -7,6 +7,8 @@ CLOCK_SPEED = 2;
 BLANK_SPACE = 10;
 
 MAP = [["F", "_", "_", "_", "7", "|", "F", "_", "7", "|", "|", "|", "|", "|", "|", "|", "|", "|", "|", "|", "|", "L", "_", "J", "|", "L", "_", "_", "_", "J"], ["F", "_", "_", "7", "_", "|", "|", "|", "|", "_", "L", "7", "|", "|", "_", "_", "|", "|", "|", "_", "_", "|", "|", "|", "_", "_", "L", "_", "J", "_"], ["F", "_", "_", "_", "7", "L", "_", "_", "7", "|", "F", "_", "_", "J", "|", "|", "F", "_", "_", "J", "|", "L", "_", "_", "7", "L", "_", "_", "_", "J"], ["F", "_", "_", "_", "7", "L", "_", "_", "7", "|", "F", "_", "_", "J", "|", "L", "_", "_", "7", "|", "F", "_", "_", "J", "|", "L", "_", "_", "_", "J"], ["F", "7", "_", "F", "7", "|", "|", "_", "|", "|", "|", "L", "_", "J", "|", "L", "_", "_", "7", "|", "_", "_", "_", "|", "|", "_", "_", "_", "L", "J"], ["F", "_", "_", "_", "7", "|", "F", "_", "_", "J", "|", "L", "_", "_", "7", "L", "_", "_", "7", "|", "F", "_", "_", "J", "|", "L", "_", "_", "_", "J"], ["F", "_", "_", "_", "7", "|", "F", "_", "_", "J", "|", "L", "_", "_", "7", "|", "F", "_", "7", "|", "|", "L", "_", "J", "|", "L", "_", "_", "_", "J"], ["F", "_", "_", "_", "7", "L", "_", "_", "7", "|", "_", "_", "_", "|", "|", "_", "_", "_", "|", "|", "_", "_", "_", "|", "|", "_", "_", "_", "L", "J"], ["F", "_", "_", "_", "7", "|", "F", "_", "7", "|", "|", "L", "_", "J", "|", "|", "F", "_", "7", "|", "|", "L", "_", "J", "|", "L", "_", "_", "_", "J"], ["F", "_", "_", "_", "7", "|", "F", "_", "7", "|", "|", "L", "_", "J", "|", "L", "_", "_", "7", "|", "F", "_", "_", "J", "|", "L", "_", "_", "_", "J"]];
+
+DOTMAP = [["_", "_", "F", "7", "L", "J", "F", "7", "L", "J", "_", "_"]];
 
 Clock = (function() {
   function Clock(x, y) {
@@ -47,7 +49,7 @@ Clock = (function() {
       center: this.center,
       radius: CLOCK_WIDTH,
       strokeColor: 'black',
-      strokeWidth: 3
+      strokeWidth: 2
     });
   }
 
@@ -147,8 +149,45 @@ ClockNumber = (function() {
 
 })();
 
-clock = new ClockNumber(100, 100);
+ClockDots = (function() {
+  function ClockDots(x, y) {
+    var s;
+    if (x == null) {
+      x = 0;
+    }
+    if (y == null) {
+      y = 0;
+    }
+    s = BLANK_SPACE + CLOCK_WIDTH * 2;
+    this.clocks = [new Clock(x + s, y), new Clock(x + 2 * s, y), new Clock(x + s, y + s), new Clock(x + 2 * s, y + s), new Clock(x + s, y + s * 2), new Clock(x + 2 * s, y + s * 2), new Clock(x + s, y + s * 3), new Clock(x + 2 * s, y + s * 3), new Clock(x + s, y + s * 4), new Clock(x + 2 * s, y + s * 4), new Clock(x + s, y + s * 5), new Clock(x + 2 * s, y + s * 5)];
+  }
+
+  ClockDots.prototype.shape = function(digit) {
+    var clock, i, index, len, mapToApply, ref, results;
+    mapToApply = DOTMAP[digit];
+    ref = this.clocks;
+    results = [];
+    for (index = i = 0, len = ref.length; i < len; index = ++i) {
+      clock = ref[index];
+      results.push(clock.setState(mapToApply[index]));
+    }
+    return results;
+  };
+
+  return ClockDots;
+
+})();
+
+s = BLANK_SPACE + CLOCK_WIDTH * 2;
+
+hour = new ClockNumber(30, 100);
+
+hour2 = new ClockNumber(30 + 5 * s, 100);
+
+dot = new ClockDots(30 + 10 * s, 100);
 
 document.onclick = function() {
-  return clock.shape(8);
+  hour.shape(1);
+  hour2.shape(8);
+  return dot.shape(0);
 };
