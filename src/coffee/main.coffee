@@ -43,7 +43,7 @@ class Clock
   play: ->
     thisFrom = @from
     @minuteHand.onFrame = (event) ->
-      this.rotate(0, thisFrom)
+      this.rotate(CLOCK_SPEED/2, thisFrom)
     @hourHand.onFrame = (event) ->
       this.rotate(CLOCK_SPEED, thisFrom)
 
@@ -61,15 +61,27 @@ class Clock
         this.rotate(diff, thisFrom)
         this.rotate(0 , thisFrom)
         this.onFrame = undefined
-    
+  
+  setHandPosition: (minutePosition, hourPostion) ->
+    this.goto(this.hourHand,minutePosition)
+    this.goto(this.minuteHand,hourPostion)
+
+
+  setState: (state) ->
+    switch state
+      when "PLAY" then this.play()
+      when "PAUSE" then this.pause()
+      when "3" then this.setHandPosition(0,90)
+      when "6" then this.setHandPosition(0,180)
+      when "9" then this.setHandPosition(0,-90)
+      when "0" then this.setHandPosition(0,0)
+      when "VERTICAL" then this.setHandPosition(0,180)
+      when "HORIZONTAL" then this.setHandPosition(-90,90)
 
 
 clock = new Clock(100,100)
-clock.play()
+clock.setState("PLAY")
 
 click = 0
 document.onclick = ->
-  if click%2
-    clock.goto(clock.hourHand, 0)
-  else 
-    clock.play
+  clock.setState("6")

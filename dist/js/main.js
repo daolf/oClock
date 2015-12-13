@@ -58,7 +58,7 @@ Clock = (function() {
     var thisFrom;
     thisFrom = this.from;
     this.minuteHand.onFrame = function(event) {
-      return this.rotate(0, thisFrom);
+      return this.rotate(CLOCK_SPEED / 2, thisFrom);
     };
     return this.hourHand.onFrame = function(event) {
       return this.rotate(CLOCK_SPEED, thisFrom);
@@ -85,17 +85,42 @@ Clock = (function() {
     };
   };
 
+  Clock.prototype.setHandPosition = function(minutePosition, hourPostion) {
+    this.goto(this.hourHand, minutePosition);
+    return this.goto(this.minuteHand, hourPostion);
+  };
+
+  Clock.prototype.setState = function(state) {
+    switch (state) {
+      case "PLAY":
+        return this.play();
+      case "PAUSE":
+        return this.pause();
+      case "3":
+        return this.setHandPosition(0, 90);
+      case "6":
+        return this.setHandPosition(0, 180);
+      case "9":
+        return this.setHandPosition(0, -90);
+      case "0":
+        return this.setHandPosition(0, 0);
+      case "VERTICAL":
+        return this.setHandPosition(0, 180);
+      case "HORIZONTAL":
+        return this.setHandPosition(-90, 90);
+    }
+  };
+
   return Clock;
 
 })();
 
 clock = new Clock(100, 100);
 
-clock.play();
+clock.setState("PLAY");
 
 click = 0;
 
 document.onclick = function() {
-  console.log("ok");
-  return clock.goto(clock.hourHand, 0);
+  return clock.setState("6");
 };
