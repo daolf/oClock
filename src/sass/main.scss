@@ -4,9 +4,13 @@
 @import url(http://fonts.googleapis.com/css?family=PT+Serif);
 
 body {
-  margin: 0
+  margin: 0;
+  width: 100%;
+  height: 100vh;
 }
 
 canvas {
   background-color: grey;
+  width: 100%;
+  height: 100%;
   }

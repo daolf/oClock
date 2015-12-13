@@ -1,37 +1,54 @@
-var CANVAS, CONTEXT, Clock, clock, path, start;
+var CLOCK_SPEED, CLOCK_WIDTH, Clock, clock;
 
-CANVAS = document.getElementById("myCanvas");
+CLOCK_WIDTH = 40;
 
-CONTEXT = CANVAS.getContext("2d");
+CLOCK_SPEED = 2;
 
 Clock = (function() {
-  function Clock() {
-    this.hello = "Helloooooo World!";
-    this.ctx = CONTEXT;
+  function Clock(x, y) {
+    var self;
+    if (x == null) {
+      x = 0;
+    }
+    if (y == null) {
+      y = 0;
+    }
+    self = this;
+    this.center = new Point(x, y);
+    this.from = new Point(x, y);
+    this.to = new Point(x, y - (CLOCK_WIDTH - 5));
+    this.minuteHand = new Path.Line({
+      from: this.from,
+      to: this.to,
+      strokeColor: 'black',
+      strokeCap: 'round',
+      strokeWidth: 4,
+      onFrame: function(event) {
+        console.log(this);
+        return this.rotate(CLOCK_SPEED, self.from);
+      }
+    });
+    this.hourHand = new Path.Line({
+      from: this.from,
+      to: this.to,
+      strokeColor: 'black',
+      strokeCap: 'round',
+      strokeWidth: 4,
+      onFrame: function(event) {
+        console.log(this);
+        return this.rotate(CLOCK_SPEED / 60, self.from);
+      }
+    });
+    this.container = new Path.Circle({
+      center: this.center,
+      radius: CLOCK_WIDTH,
+      strokeColor: 'black',
+      strokeWidth: 3
+    });
   }
-
-  Clock.prototype.draw = function() {
-    this.ctx.beginPath();
-    this.ctx.arc(0, 0, 100, 0, 2 * Math.PI);
-    return this.ctx.stroke();
-  };
-
-  Clock.prototype.helloWorld = function() {
-    return console.log(this.hello);
-  };
 
   return Clock;
 
 })();
 
-clock = new Clock();
-
-path = new Path();
-
-path.strokeColor = 'black';
-
-start = new Point(100, 100);
-
-path.moveTo(start);
-
-path.lineTo(start + [100, -50]);
+clock = new Clock(100, 100);

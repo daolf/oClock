@@ -1,9 +1,13 @@
 @import url(http://fonts.googleapis.com/css?family=Raleway:300);
 @import url(http://fonts.googleapis.com/css?family=PT+Serif);
 body {
-  margin: 0; }
+  margin: 0;
+  width: 100%;
+  height: 100vh; }
 
 canvas {
-  background-color: grey; }
+  background-color: grey;
+  width: 100%;
+  height: 100%; }
 
 /*# sourceMappingURL=main.css.map */

@@ -1,23 +1,38 @@
-CANVAS = document.getElementById("myCanvas")
-CONTEXT = CANVAS.getContext("2d")
+CLOCK_WIDTH = 40
+CLOCK_SPEED = 2
 
 class Clock
-  constructor: () ->
-    @hello = "Helloooooo World!"
-    @ctx = CONTEXT
+  constructor: (x = 0, y = 0) ->
+    self = @
+    @center = new Point(x, y)
+    @from = new Point(x, y)
+    @to = new Point(x, y - (CLOCK_WIDTH - 5 ))
+    
+    @minuteHand = new Path.Line
+      from: @from
+      to: @to
+      strokeColor: 'black'
+      strokeCap: 'round'
+      strokeWidth: 4
+      onFrame: (event) ->
+        console.log @
+        this.rotate(CLOCK_SPEED, self.from)
 
+    @hourHand = new Path.Line
+      from: @from
+      to: @to
+      strokeColor: 'black'
+      strokeCap: 'round'
+      strokeWidth: 4
+      onFrame: (event) ->
+        console.log @
+        this.rotate(CLOCK_SPEED/60, self.from)
 
-  draw: () ->
-    @ctx.beginPath();
-    @ctx.arc(0,0,100,0,2*Math.PI);
-    @ctx.stroke();
+    @container = new Path.Circle
+      center: @center
+      radius: CLOCK_WIDTH
+      strokeColor: 'black'
+      strokeWidth: 3
+    
 
-  helloWorld: () ->
-    console.log @hello
-
-clock = new Clock()
-path = new Path();
-path.strokeColor = 'black';
-start = new Point(100, 100);
-path.moveTo(start);
-path.lineTo(start + [ 100, -50 ]);
+clock = new Clock(100,100)
