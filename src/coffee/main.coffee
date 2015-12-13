@@ -69,5 +69,7 @@ clock.play()
 
 click = 0
 document.onclick = ->
-  console.log "ok"
-  clock.goto(clock.hourHand, 0)
+  if click%2
+    clock.goto(clock.hourHand, 0)
+  else 
+    clock.play
