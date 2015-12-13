@@ -1,8 +1,10 @@
-var CLOCK_SPEED, CLOCK_WIDTH, Clock, click, clock;
+var BLANK_SPACE, CLOCK_SPEED, CLOCK_WIDTH, Clock, ClockNumber, MAP, clock;
 
 CLOCK_WIDTH = 40;
 
 CLOCK_SPEED = 2;
+
+BLANK_SPACE = 10;
 
 Clock = (function() {
   function Clock(x, y) {
@@ -36,7 +38,7 @@ Clock = (function() {
       strokeWidth: 4,
       applyMatrix: false,
       onFrame: function(event) {
-        return this.rotate(CLOCK_SPEED / 2, self.from);
+        return this.rotate(CLOCK_SPEED, self.from);
       }
     });
     this.container = new Path.Circle({
@@ -45,7 +47,6 @@ Clock = (function() {
       strokeColor: 'black',
       strokeWidth: 3
     });
-    return;
   }
 
   Clock.prototype.pause = function() {
@@ -58,7 +59,7 @@ Clock = (function() {
     var thisFrom;
     thisFrom = this.from;
     this.minuteHand.onFrame = function(event) {
-      return this.rotate(CLOCK_SPEED / 2, thisFrom);
+      return this.rotate(CLOCK_SPEED, thisFrom);
     };
     return this.hourHand.onFrame = function(event) {
       return this.rotate(CLOCK_SPEED, thisFrom);
@@ -75,9 +76,9 @@ Clock = (function() {
       } else {
         diff = Math.abs(hand.getRotation() - angle);
       }
-      if (diff > CLOCK_SPEED) {
+      if (Math.abs(diff) > CLOCK_SPEED) {
         return this.rotate(CLOCK_SPEED, thisFrom);
-      } else if (diff < CLOCK_SPEED) {
+      } else if (Math.abs(diff) < CLOCK_SPEED) {
         this.rotate(diff, thisFrom);
         this.rotate(0, thisFrom);
         return this.onFrame = void 0;
@@ -96,17 +97,17 @@ Clock = (function() {
         return this.play();
       case "PAUSE":
         return this.pause();
-      case "3":
+      case "L":
         return this.setHandPosition(0, 90);
-      case "6":
+      case "F":
+        return this.setHandPosition(90, 180);
+      case "7":
+        return this.setHandPosition(180, -90);
+      case "J":
+        return this.setHandPosition(-90, 0);
+      case "|":
         return this.setHandPosition(0, 180);
-      case "9":
-        return this.setHandPosition(0, -90);
-      case "0":
-        return this.setHandPosition(0, 0);
-      case "VERTICAL":
-        return this.setHandPosition(0, 180);
-      case "HORIZONTAL":
+      case "_":
         return this.setHandPosition(-90, 90);
     }
   };
@@ -115,12 +116,39 @@ Clock = (function() {
 
 })();
 
-clock = new Clock(100, 100);
+MAP = [["F", "_", "_", "_", "7", "|", "F", "_", "7", "|", "|", "|", "|", "|", "|", "|", "|", "|", "|", "|", "|", "L", "_", "J", "|", "L", "_", "_", "_", "J"]];
 
-clock.setState("PLAY");
+ClockNumber = (function() {
+  function ClockNumber(x, y) {
+    var s;
+    if (x == null) {
+      x = 0;
+    }
+    if (y == null) {
+      y = 0;
+    }
+    s = BLANK_SPACE + CLOCK_WIDTH * 2;
+    this.clocks = [new Clock(x + s, y), new Clock(x + 2 * s, y), new Clock(x + 3 * s, y), new Clock(x + 4 * s, y), new Clock(x + 5 * s, y), new Clock(x + s, y + s), new Clock(x + 2 * s, y + s), new Clock(x + 3 * s, y + s), new Clock(x + 4 * s, y + s), new Clock(x + 5 * s, y + s), new Clock(x + s, y + s * 2), new Clock(x + 2 * s, y + s * 2), new Clock(x + 3 * s, y + s * 2), new Clock(x + 4 * s, y + s * 2), new Clock(x + 5 * s, y + s * 2), new Clock(x + s, y + s * 3), new Clock(x + 2 * s, y + s * 3), new Clock(x + 3 * s, y + s * 3), new Clock(x + 4 * s, y + s * 3), new Clock(x + 5 * s, y + s * 3), new Clock(x + s, y + s * 4), new Clock(x + 2 * s, y + s * 4), new Clock(x + 3 * s, y + s * 4), new Clock(x + 4 * s, y + s * 4), new Clock(x + 5 * s, y + s * 4), new Clock(x + s, y + s * 5), new Clock(x + 2 * s, y + s * 5), new Clock(x + 3 * s, y + s * 5), new Clock(x + 4 * s, y + s * 5), new Clock(x + 5 * s, y + s * 5)];
+  }
 
-click = 0;
+  ClockNumber.prototype.shape = function(digit) {
+    var clock, i, index, len, mapToApply, ref, results;
+    mapToApply = MAP[digit];
+    ref = this.clocks;
+    results = [];
+    for (index = i = 0, len = ref.length; i < len; index = ++i) {
+      clock = ref[index];
+      results.push(clock.setState(mapToApply[index]));
+    }
+    return results;
+  };
+
+  return ClockNumber;
+
+})();
+
+clock = new ClockNumber(100, 100);
 
 document.onclick = function() {
-  return clock.setState("6");
+  return clock.shape(0);
 };

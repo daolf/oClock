@@ -1,5 +1,6 @@
 CLOCK_WIDTH = 40
 CLOCK_SPEED = 2
+BLANK_SPACE = 10
 
 class Clock
   constructor: (x = 0, y = 0) ->
@@ -26,15 +27,13 @@ class Clock
       strokeWidth: 4
       applyMatrix: false
       onFrame: (event) ->
-        this.rotate(CLOCK_SPEED/2, self.from)
+        this.rotate(CLOCK_SPEED, self.from)
 
     @container = new Path.Circle
       center: @center
       radius: CLOCK_WIDTH
       strokeColor: 'black'
       strokeWidth: 3
-
-    return
   
   pause: ->
     @hourHand.onFrame = (event) ->
@@ -43,7 +42,7 @@ class Clock
   play: ->
     thisFrom = @from
     @minuteHand.onFrame = (event) ->
-      this.rotate(CLOCK_SPEED/2, thisFrom)
+      this.rotate(CLOCK_SPEED, thisFrom)
     @hourHand.onFrame = (event) ->
       this.rotate(CLOCK_SPEED, thisFrom)
 
@@ -55,9 +54,9 @@ class Clock
       else 
         diff = Math.abs(hand.getRotation() - angle)
 
-      if diff > CLOCK_SPEED
+      if Math.abs(diff) > CLOCK_SPEED
         this.rotate(CLOCK_SPEED, thisFrom)
-      else if diff < CLOCK_SPEED
+      else if Math.abs(diff) < CLOCK_SPEED
         this.rotate(diff, thisFrom)
         this.rotate(0 , thisFrom)
         this.onFrame = undefined
@@ -69,19 +68,48 @@ class Clock
 
   setState: (state) ->
     switch state
+      #State have fancy names to make mapping easier with visual help
       when "PLAY" then this.play()
       when "PAUSE" then this.pause()
-      when "3" then this.setHandPosition(0,90)
-      when "6" then this.setHandPosition(0,180)
-      when "9" then this.setHandPosition(0,-90)
-      when "0" then this.setHandPosition(0,0)
-      when "VERTICAL" then this.setHandPosition(0,180)
-      when "HORIZONTAL" then this.setHandPosition(-90,90)
+      when "L" then this.setHandPosition(0,90)
+      when "F" then this.setHandPosition(90,180)
+      when "7" then this.setHandPosition(180,-90)
+      when "J" then this.setHandPosition(-90,0)
+      when "|" then this.setHandPosition(0,180)
+      when "_" then this.setHandPosition(-90,90)
 
+MAP = [
+  [ "F", "_", "_", "_", "7",
+    "|", "F", "_", "7", "|",
+    "|", "|", "|", "|", "|",
+    "|", "|", "|", "|", "|",
+    "|", "L", "_", "J", "|",
+    "L", "_", "_", "_", "J"
+  ]
+]
 
-clock = new Clock(100,100)
-clock.setState("PLAY")
+class ClockNumber
+  constructor: (x = 0, y = 0) ->
+    s = BLANK_SPACE + CLOCK_WIDTH*2
+    @clocks = [
+      new Clock(x + s,y)      , new Clock(x + 2*s, y)       , new Clock(x + 3*s, y)       , new Clock(x + 4*s, y)       , new Clock(x + 5*s, y),
+      new Clock(x + s,y + s)  , new Clock(x + 2*s, y + s)   , new Clock(x + 3*s, y + s)   , new Clock(x + 4*s, y + s)   , new Clock(x + 5*s, y + s),
+      new Clock(x + s,y + s*2), new Clock(x + 2*s, y + s*2) , new Clock(x + 3*s, y + s*2) , new Clock(x + 4*s, y + s*2) , new Clock(x + 5*s, y + s*2),
+      new Clock(x + s,y + s*3), new Clock(x + 2*s, y + s*3) , new Clock(x + 3*s, y + s*3) , new Clock(x + 4*s, y + s*3) , new Clock(x + 5*s, y + s*3),
+      new Clock(x + s,y + s*4), new Clock(x + 2*s, y + s*4) , new Clock(x + 3*s, y + s*4) , new Clock(x + 4*s, y + s*4) , new Clock(x + 5*s, y + s*4),
+      new Clock(x + s,y + s*5), new Clock(x + 2*s, y + s*5) , new Clock(x + 3*s, y + s*5) , new Clock(x + 4*s, y + s*5) , new Clock(x + 5*s, y + s*5)
+    ]
 
-click = 0
+  shape: (digit) ->
+    mapToApply = MAP[digit]
+    for clock, index in @clocks
+      clock.setState(mapToApply[index])
+    
+
+# clock = new Clock(100, 100)
+# document.onclick = ->
+#   clock.setState("_")
+
+clock = new ClockNumber(100, 100)
 document.onclick = ->
-  clock.setState("6")
+  clock.shape(0)
