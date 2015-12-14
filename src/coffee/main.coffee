@@ -2,7 +2,8 @@ SCREEN_WIDTH = screen.availWidth
 SCREEN_HEIGHT = screen.availHeight
 CLOCK_SPEED = 2
 BLANK_SPACE = 5
-CLOCK_WIDTH = (SCREEN_WIDTH - 36* BLANK_SPACE ) / 36 / 2
+CLOCK_WIDTH = Math.floor((SCREEN_WIDTH - 36* BLANK_SPACE ) / 74)
+console.log CLOCK_WIDTH
 MAP = [
   #0
   [ "F", "_", "_", "_", "7",
