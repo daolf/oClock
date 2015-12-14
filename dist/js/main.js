@@ -1,4 +1,4 @@
-var ArtPiece, BLANK_SPACE, CLOCK_SPEED, CLOCK_WIDTH, Clock, ClockDots, ClockNumber, DOTMAP, MAP, SCREEN_HEIGHT, SCREEN_WIDTH;
+var ArtPiece, BLANK_SPACE, CLOCK_SPEED, CLOCK_WIDTH, Clock, ClockDots, ClockNumber, DOTMAP, MAP, SCREEN_HEIGHT, SCREEN_WIDTH, artPiece, play, setTime;
 
 SCREEN_WIDTH = screen.availWidth;
 
@@ -6,9 +6,9 @@ SCREEN_HEIGHT = screen.availHeight;
 
 CLOCK_SPEED = 2;
 
-BLANK_SPACE = 10;
+BLANK_SPACE = 5;
 
-CLOCK_WIDTH = (SCREEN_WIDTH - 24 * BLANK_SPACE) / 24 / 2;
+CLOCK_WIDTH = (SCREEN_WIDTH - 36 * BLANK_SPACE) / 36 / 2;
 
 MAP = [["F", "_", "_", "_", "7", "|", "F", "_", "7", "|", "|", "|", "|", "|", "|", "|", "|", "|", "|", "|", "|", "L", "_", "J", "|", "L", "_", "_", "_", "J"], ["F", "_", "_", "7", "_", "|", "|", "|", "|", "_", "L", "7", "|", "|", "_", "_", "|", "|", "|", "_", "_", "|", "|", "|", "_", "_", "L", "_", "J", "_"], ["F", "_", "_", "_", "7", "L", "_", "_", "7", "|", "F", "_", "_", "J", "|", "|", "F", "_", "_", "J", "|", "L", "_", "_", "7", "L", "_", "_", "_", "J"], ["F", "_", "_", "_", "7", "L", "_", "_", "7", "|", "F", "_", "_", "J", "|", "L", "_", "_", "7", "|", "F", "_", "_", "J", "|", "L", "_", "_", "_", "J"], ["F", "7", "_", "F", "7", "|", "|", "_", "|", "|", "|", "L", "_", "J", "|", "L", "_", "_", "7", "|", "_", "_", "_", "|", "|", "_", "_", "_", "L", "J"], ["F", "_", "_", "_", "7", "|", "F", "_", "_", "J", "|", "L", "_", "_", "7", "L", "_", "_", "7", "|", "F", "_", "_", "J", "|", "L", "_", "_", "_", "J"], ["F", "_", "_", "_", "7", "|", "F", "_", "_", "J", "|", "L", "_", "_", "7", "|", "F", "_", "7", "|", "|", "L", "_", "J", "|", "L", "_", "_", "_", "J"], ["F", "_", "_", "_", "7", "L", "_", "_", "7", "|", "_", "_", "_", "|", "|", "_", "_", "_", "|", "|", "_", "_", "_", "|", "|", "_", "_", "_", "L", "J"], ["F", "_", "_", "_", "7", "|", "F", "_", "7", "|", "|", "L", "_", "J", "|", "|", "F", "_", "7", "|", "|", "L", "_", "J", "|", "L", "_", "_", "_", "J"], ["F", "_", "_", "_", "7", "|", "F", "_", "7", "|", "|", "L", "_", "J", "|", "L", "_", "_", "7", "|", "F", "_", "_", "J", "|", "L", "_", "_", "_", "J"]];
 
@@ -150,6 +150,17 @@ ClockNumber = (function() {
     return results;
   };
 
+  ClockNumber.prototype.play = function() {
+    var clock, i, len, ref, results;
+    ref = this.clocks;
+    results = [];
+    for (i = 0, len = ref.length; i < len; i++) {
+      clock = ref[i];
+      results.push(clock.play());
+    }
+    return results;
+  };
+
   return ClockNumber;
 
 })();
@@ -166,6 +177,17 @@ ClockDots = (function() {
     s = BLANK_SPACE + CLOCK_WIDTH * 2;
     this.clocks = [new Clock(x + s, y), new Clock(x + 2 * s, y), new Clock(x + s, y + s), new Clock(x + 2 * s, y + s), new Clock(x + s, y + s * 2), new Clock(x + 2 * s, y + s * 2), new Clock(x + s, y + s * 3), new Clock(x + 2 * s, y + s * 3), new Clock(x + s, y + s * 4), new Clock(x + 2 * s, y + s * 4), new Clock(x + s, y + s * 5), new Clock(x + 2 * s, y + s * 5)];
   }
+
+  ClockDots.prototype.play = function() {
+    var clock, i, len, ref, results;
+    ref = this.clocks;
+    results = [];
+    for (i = 0, len = ref.length; i < len; i++) {
+      clock = ref[i];
+      results.push(clock.play());
+    }
+    return results;
+  };
 
   ClockDots.prototype.shape = function(digit) {
     var clock, i, index, len, mapToApply, ref, results;
@@ -193,18 +215,62 @@ ArtPiece = (function() {
     this.dot = new ClockDots(beginX + 10 * s, 100);
     this.minute = new ClockNumber(beginX + 12 * s, 100);
     this.minute2 = new ClockNumber(beginX + 17 * s, 100);
+    this.dot2 = new ClockDots(beginX + 22 * s, 100);
+    this.second = new ClockNumber(beginX + 24 * s, 100);
+    this.second2 = new ClockNumber(beginX + 29 * s, 100);
   }
+
+  ArtPiece.prototype.play = function() {
+    console.log("Play");
+    this.hour.play();
+    this.hour2.play();
+    this.dot.play();
+    this.minute.play();
+    this.minute2.play();
+    this.dot2.play();
+    this.second.play();
+    return this.second2.play();
+  };
+
+  ArtPiece.prototype.setTime = function() {
+    var d, getTen, hours, minutes, seconds;
+    d = new Date();
+    hours = d.getHours();
+    minutes = d.getMinutes();
+    seconds = d.getSeconds();
+    getTen = function(number) {
+      return Math.floor(number / 10);
+    };
+    this.hour.shape(getTen(hours));
+    this.hour2.shape(hours % 10);
+    this.dot.shape(0);
+    this.minute.shape(getTen(minutes));
+    this.minute2.shape(minutes % 10);
+    this.dot2.shape(0);
+    this.second.shape(getTen(seconds));
+    return this.second2.shape(seconds % 10);
+  };
 
   return ArtPiece;
 
 })();
 
-new ArtPiece();
+artPiece = new ArtPiece();
 
-document.onclick = function() {
-  hour.shape(1);
-  hour2.shape(8);
-  dot.shape(0);
-  minute.shape(4);
-  return minute2.shape(3);
+play = function(artPiece) {
+  artPiece.play();
+  return setTimeout((function() {
+    return setTime(artPiece);
+  }), 3500);
 };
+
+setTime = function(artPiece) {
+  artPiece.setTime();
+  return setTimeout((function() {
+    return play(artPiece);
+  }), 6000);
+};
+
+setTimeout((function() {
+  return setTime(artPiece);
+}), 3500);

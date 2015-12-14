@@ -1,8 +1,8 @@
 SCREEN_WIDTH = screen.availWidth
 SCREEN_HEIGHT = screen.availHeight
 CLOCK_SPEED = 2
-BLANK_SPACE = 10
-CLOCK_WIDTH = (SCREEN_WIDTH - 24* BLANK_SPACE ) / 24 / 2
+BLANK_SPACE = 5
+CLOCK_WIDTH = (SCREEN_WIDTH - 36* BLANK_SPACE ) / 36 / 2
 MAP = [
   #0
   [ "F", "_", "_", "_", "7",
@@ -191,6 +191,10 @@ class ClockNumber
     for clock, index in @clocks
       clock.setState(mapToApply[index])
 
+  play: ->
+    for clock in @clocks
+      clock.play()
+
 class ClockDots
   constructor: (x = 0, y = 0) ->
     s = BLANK_SPACE + CLOCK_WIDTH*2
@@ -203,6 +207,10 @@ class ClockDots
       new Clock(x + s,y + s*5), new Clock(x + 2*s, y + s*5) 
     ]
 
+  play: ->
+    for clock in @clocks
+      clock.play()
+
   shape: (digit) ->
     mapToApply = DOTMAP[digit]
     for clock, index in @clocks
@@ -210,6 +218,7 @@ class ClockDots
     
 
 class ArtPiece
+
   constructor: ->
     s = BLANK_SPACE + CLOCK_WIDTH*2
     beginX = CLOCK_WIDTH
@@ -218,11 +227,52 @@ class ArtPiece
     @dot = new ClockDots(beginX + 10 * s, 100)
     @minute = new ClockNumber(beginX + 12 * s, 100)
     @minute2 = new ClockNumber(beginX + 17 * s, 100)
+    @dot2 = new ClockDots(beginX + 22 * s, 100)
+    @second = new ClockNumber(beginX + 24 * s, 100)
+    @second2 = new ClockNumber(beginX + 29 * s, 100)
 
-new ArtPiece()
-document.onclick = ->
-  hour.shape(1)
-  hour2.shape(8)
-  dot.shape(0)
-  minute.shape(4)
-  minute2.shape(3)
+  play: ->
+    console.log "Play"
+    @hour.play()
+    @hour2.play()
+    @dot.play()
+    @minute.play()
+    @minute2.play()
+    @dot2.play()
+    @second.play()
+    @second2.play()
+
+  setTime: ->
+    d = new Date()
+    hours = d.getHours()
+    minutes =  d.getMinutes()
+    seconds = d.getSeconds()
+    getTen = (number) -> Math.floor(number/10)
+
+    @hour.shape(getTen(hours))
+    @hour2.shape(hours%10)
+    @dot.shape(0)
+    @minute.shape(getTen(minutes))
+    @minute2.shape(minutes%10)
+    @dot2.shape(0)
+    @second.shape(getTen(seconds))
+    @second2.shape(seconds%10)
+
+artPiece = new ArtPiece()
+
+play = (artPiece) ->
+  artPiece.play()
+  setTimeout (->
+    setTime artPiece 
+  ), 3500
+
+setTime = (artPiece) ->
+  artPiece.setTime()
+  setTimeout (->
+    play artPiece
+  ), 6000
+
+setTimeout (->
+  setTime artPiece
+), 3500
+
