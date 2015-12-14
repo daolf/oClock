@@ -22,10 +22,11 @@ Clock = (function() {
     self = this;
     this.center = new Point(x, y);
     this.from = new Point(x, y);
-    this.to = new Point(x, y - (CLOCK_WIDTH - 5));
+    this.toUp = new Point(x, y - (CLOCK_WIDTH - 5));
+    this.toDown = new Point(x, y + (CLOCK_WIDTH - 5));
     this.minuteHand = new Path.Line({
       from: this.from,
-      to: this.to,
+      to: this.toUp,
       strokeColor: 'black',
       strokeCap: 'round',
       strokeWidth: 4,
@@ -36,7 +37,7 @@ Clock = (function() {
     });
     this.hourHand = new Path.Line({
       from: this.from,
-      to: this.to,
+      to: this.toDown,
       strokeColor: 'black',
       strokeCap: 'round',
       strokeWidth: 4,
@@ -102,17 +103,17 @@ Clock = (function() {
       case "PAUSE":
         return this.pause();
       case "L":
-        return this.setHandPosition(0, 90);
+        return this.setHandPosition(180, 90);
       case "F":
-        return this.setHandPosition(90, 180);
+        return this.setHandPosition(-90, 180);
       case "7":
-        return this.setHandPosition(180, -90);
+        return this.setHandPosition(0, -90);
       case "J":
-        return this.setHandPosition(-90, 0);
+        return this.setHandPosition(90, 0);
       case "|":
-        return this.setHandPosition(0, 180);
+        return this.setHandPosition(180, 180);
       case "_":
-        return this.setHandPosition(-90, 90);
+        return this.setHandPosition(90, 90);
     }
   };
 

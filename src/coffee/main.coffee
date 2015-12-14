@@ -99,11 +99,12 @@ class Clock
     self = @
     @center = new Point(x, y)
     @from = new Point(x, y)
-    @to = new Point(x, y - (CLOCK_WIDTH - 5 ))
+    @toUp = new Point(x, y - (CLOCK_WIDTH - 5 ))
+    @toDown = new Point(x, y + (CLOCK_WIDTH - 5 ))
     
     @minuteHand = new Path.Line
       from: @from
-      to: @to
+      to: @toUp
       strokeColor: 'black'
       strokeCap: 'round'
       strokeWidth: 4
@@ -113,7 +114,7 @@ class Clock
 
     @hourHand = new Path.Line
       from: @from
-      to: @to
+      to: @toDown
       strokeColor: 'black'
       strokeCap: 'round'
       strokeWidth: 4
@@ -163,12 +164,12 @@ class Clock
       #State have fancy names to make mapping easier with visual help
       when "PLAY" then this.play()
       when "PAUSE" then this.pause()
-      when "L" then this.setHandPosition(0,90)
-      when "F" then this.setHandPosition(90,180)
-      when "7" then this.setHandPosition(180,-90)
-      when "J" then this.setHandPosition(-90,0)
-      when "|" then this.setHandPosition(0,180)
-      when "_" then this.setHandPosition(-90,90)
+      when "L" then this.setHandPosition(180,90)
+      when "F" then this.setHandPosition(-90,180)
+      when "7" then this.setHandPosition(0,-90)
+      when "J" then this.setHandPosition(90,0)
+      when "|" then this.setHandPosition(180,180)
+      when "_" then this.setHandPosition(90,90)
 
 
 class ClockNumber
