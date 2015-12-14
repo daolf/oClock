@@ -1,5 +1,5 @@
 # oclock
-Little projest to play around with paperjs, deme [here](http://daolf.github.io/oClock/)
+Little projest to play around with paperjs, demo [here](http://daolf.github.io/oClock/)
 
 ## Disclaimer
 First time using this lib this project was only to play around with it. All creative credits goes to [Human Since 1982](http://www.humanssince1982.com/a-million-times/) 
