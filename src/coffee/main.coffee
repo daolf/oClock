@@ -1,6 +1,8 @@
-CLOCK_WIDTH = 20
+SCREEN_WIDTH = screen.availWidth
+SCREEN_HEIGHT = screen.availHeight
 CLOCK_SPEED = 2
 BLANK_SPACE = 10
+CLOCK_WIDTH = (SCREEN_WIDTH - 24* BLANK_SPACE ) / 24 / 2
 MAP = [
   #0
   [ "F", "_", "_", "_", "7",
@@ -207,16 +209,17 @@ class ClockDots
       clock.setState(mapToApply[index])
     
 
-# clock = new Clock(100, 100)
-# document.onclick = ->
-#   clock.setState("_")
-s = BLANK_SPACE + CLOCK_WIDTH*2
-hour = new ClockNumber(30, 100)
-hour2 = new ClockNumber(30 + 5 * s, 100)
-dot = new ClockDots(30 + 10 * s, 100)
-minute = new ClockNumber(30 + 12 * s, 100)
-minute2 = new ClockNumber(30 + 17 * s, 100)
+class ArtPiece
+  constructor: ->
+    s = BLANK_SPACE + CLOCK_WIDTH*2
+    beginX = CLOCK_WIDTH
+    @hour = new ClockNumber(beginX, 100)
+    @hour2 = new ClockNumber(beginX + 5 * s, 100)
+    @dot = new ClockDots(beginX + 10 * s, 100)
+    @minute = new ClockNumber(beginX + 12 * s, 100)
+    @minute2 = new ClockNumber(beginX + 17 * s, 100)
 
+new ArtPiece()
 document.onclick = ->
   hour.shape(1)
   hour2.shape(8)

@@ -1,10 +1,14 @@
-var BLANK_SPACE, CLOCK_SPEED, CLOCK_WIDTH, Clock, ClockDots, ClockNumber, DOTMAP, MAP, dot, hour, hour2, minute, minute2, s;
+var ArtPiece, BLANK_SPACE, CLOCK_SPEED, CLOCK_WIDTH, Clock, ClockDots, ClockNumber, DOTMAP, MAP, SCREEN_HEIGHT, SCREEN_WIDTH;
 
-CLOCK_WIDTH = 20;
+SCREEN_WIDTH = screen.availWidth;
+
+SCREEN_HEIGHT = screen.availHeight;
 
 CLOCK_SPEED = 2;
 
 BLANK_SPACE = 10;
+
+CLOCK_WIDTH = (SCREEN_WIDTH - 24 * BLANK_SPACE) / 24 / 2;
 
 MAP = [["F", "_", "_", "_", "7", "|", "F", "_", "7", "|", "|", "|", "|", "|", "|", "|", "|", "|", "|", "|", "|", "L", "_", "J", "|", "L", "_", "_", "_", "J"], ["F", "_", "_", "7", "_", "|", "|", "|", "|", "_", "L", "7", "|", "|", "_", "_", "|", "|", "|", "_", "_", "|", "|", "|", "_", "_", "L", "_", "J", "_"], ["F", "_", "_", "_", "7", "L", "_", "_", "7", "|", "F", "_", "_", "J", "|", "|", "F", "_", "_", "J", "|", "L", "_", "_", "7", "L", "_", "_", "_", "J"], ["F", "_", "_", "_", "7", "L", "_", "_", "7", "|", "F", "_", "_", "J", "|", "L", "_", "_", "7", "|", "F", "_", "_", "J", "|", "L", "_", "_", "_", "J"], ["F", "7", "_", "F", "7", "|", "|", "_", "|", "|", "|", "L", "_", "J", "|", "L", "_", "_", "7", "|", "_", "_", "_", "|", "|", "_", "_", "_", "L", "J"], ["F", "_", "_", "_", "7", "|", "F", "_", "_", "J", "|", "L", "_", "_", "7", "L", "_", "_", "7", "|", "F", "_", "_", "J", "|", "L", "_", "_", "_", "J"], ["F", "_", "_", "_", "7", "|", "F", "_", "_", "J", "|", "L", "_", "_", "7", "|", "F", "_", "7", "|", "|", "L", "_", "J", "|", "L", "_", "_", "_", "J"], ["F", "_", "_", "_", "7", "L", "_", "_", "7", "|", "_", "_", "_", "|", "|", "_", "_", "_", "|", "|", "_", "_", "_", "|", "|", "_", "_", "_", "L", "J"], ["F", "_", "_", "_", "7", "|", "F", "_", "7", "|", "|", "L", "_", "J", "|", "|", "F", "_", "7", "|", "|", "L", "_", "J", "|", "L", "_", "_", "_", "J"], ["F", "_", "_", "_", "7", "|", "F", "_", "7", "|", "|", "L", "_", "J", "|", "L", "_", "_", "7", "|", "F", "_", "_", "J", "|", "L", "_", "_", "_", "J"]];
 
@@ -179,17 +183,23 @@ ClockDots = (function() {
 
 })();
 
-s = BLANK_SPACE + CLOCK_WIDTH * 2;
+ArtPiece = (function() {
+  function ArtPiece() {
+    var beginX, s;
+    s = BLANK_SPACE + CLOCK_WIDTH * 2;
+    beginX = CLOCK_WIDTH;
+    this.hour = new ClockNumber(beginX, 100);
+    this.hour2 = new ClockNumber(beginX + 5 * s, 100);
+    this.dot = new ClockDots(beginX + 10 * s, 100);
+    this.minute = new ClockNumber(beginX + 12 * s, 100);
+    this.minute2 = new ClockNumber(beginX + 17 * s, 100);
+  }
 
-hour = new ClockNumber(30, 100);
+  return ArtPiece;
 
-hour2 = new ClockNumber(30 + 5 * s, 100);
+})();
 
-dot = new ClockDots(30 + 10 * s, 100);
-
-minute = new ClockNumber(30 + 12 * s, 100);
-
-minute2 = new ClockNumber(30 + 17 * s, 100);
+new ArtPiece();
 
 document.onclick = function() {
   hour.shape(1);
