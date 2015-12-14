@@ -71,7 +71,7 @@ Clock = (function() {
       return this.rotate(CLOCK_SPEED, thisFrom);
     };
     return this.hourHand.onFrame = function(event) {
-      return this.rotate(CLOCK_SPEED, thisFrom);
+      return this.rotate(CLOCK_SPEED / 2, thisFrom);
     };
   };
 

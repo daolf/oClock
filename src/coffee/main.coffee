@@ -139,7 +139,7 @@ class Clock
     @minuteHand.onFrame = (event) ->
       this.rotate(CLOCK_SPEED, thisFrom)
     @hourHand.onFrame = (event) ->
-      this.rotate(CLOCK_SPEED, thisFrom)
+      this.rotate(CLOCK_SPEED/2, thisFrom)
 
   goto: (hand, angle) ->
     thisFrom = @from
