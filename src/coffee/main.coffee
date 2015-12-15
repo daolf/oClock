@@ -1,7 +1,7 @@
 SCREEN_WIDTH = screen.availWidth
 SCREEN_HEIGHT = screen.availHeight
 CLOCK_SPEED = 2
-BLANK_SPACE = 5
+BLANK_SPACE = 2
 CLOCK_WIDTH = Math.floor((SCREEN_WIDTH - 36* BLANK_SPACE ) / 74)
 console.log CLOCK_WIDTH
 MAP = [
@@ -128,7 +128,7 @@ class Clock
     @container = new Path.Circle
       center: @center
       radius: CLOCK_WIDTH
-      strokeColor: 'black'
+      strokeColor: '#4E4E4E'
       strokeWidth: 2
   
   pause: ->

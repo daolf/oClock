@@ -6,7 +6,7 @@ SCREEN_HEIGHT = screen.availHeight;
 
 CLOCK_SPEED = 2;
 
-BLANK_SPACE = 5;
+BLANK_SPACE = 2;
 
 CLOCK_WIDTH = Math.floor((SCREEN_WIDTH - 36 * BLANK_SPACE) / 74);
 
@@ -55,7 +55,7 @@ Clock = (function() {
     this.container = new Path.Circle({
       center: this.center,
       radius: CLOCK_WIDTH,
-      strokeColor: 'black',
+      strokeColor: '#4E4E4E',
       strokeWidth: 2
     });
   }
